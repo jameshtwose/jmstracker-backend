@@ -1,15 +1,16 @@
+from typing import List
 from fastapi import FastAPI, Depends, Request, Form, status
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-import models
+import models, schemas
 from database import SessionLocal, engine, get_db
 
 
 
-# from dotenv import load_dotenv, find_dotenv
-# load_dotenv(find_dotenv())
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -40,3 +41,7 @@ def add_food(request: Request, food: str = Form(...), amount: float = Form(...),
     db.commit()
     
     return new_food
+
+@app.get("/all-foods", response_model=List[schemas.Food])
+def get_all_foods(db: Session = Depends(get_db)):
+    return db.query(models.Food).all()

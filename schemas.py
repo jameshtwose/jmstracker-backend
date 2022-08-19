@@ -6,7 +6,7 @@ from typing import Optional
 class Food(BaseModel):
     id: int
     food_type: str
-    amount: int
+    amount: float
     created_at: datetime
     
     class Config:

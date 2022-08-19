@@ -9,8 +9,8 @@ from database import SessionLocal, engine, get_db
 
 
 
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+# from dotenv import load_dotenv, find_dotenv
+# load_dotenv(find_dotenv())
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -19,8 +19,9 @@ app = FastAPI()
 origins = [
     "http://127.0.0.1:5500/docs/index.html",
     "https://78eviu.deta.dev",
-    "https://jameshtwose.github.io/jmstracker-frontend/",
-    "http://localhost:3001/"
+    "https://jameshtwose.github.io/jmstracker-frontend",
+    "http://localhost:3001/jmstracker-frontend",
+    "http://localhost:3001",
     "*"
 ]
 

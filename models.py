@@ -8,18 +8,9 @@ from database import Base
 class Food(Base):
     __tablename__ = "jmstracker_backend"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, nullable=False)
     food_type = Column(String)
     amount = Column(Float, default=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
-
-class Post(Base):
-    __tablename__ = "posts"
-
-    id = Column(Integer, primary_key=True, nullable=False)
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
-    published = Column(Boolean, server_default="TRUE", nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     owner_id = Column(Integer, ForeignKey(column="users.id", ondelete="CASCADE"), nullable=False)
     owner = relationship("User")

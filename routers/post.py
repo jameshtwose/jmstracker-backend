@@ -6,77 +6,77 @@ from database import get_db
 
 
 router = APIRouter(
-    prefix="/posts",
-    tags=["Posts"]
+    prefix="/foods",
+    tags=["foods"]
 )
 
-@router.get("/", response_model=List[schemas.Post])
-def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.get("/", response_model=List[schemas.Food])
+def get_foods(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
-    posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
-    return posts
+    foods = db.query(models.Food).filter(models.Food.owner_id == current_user.id).all()
+    return foods
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db),
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Food)
+def create_foods(food: schemas.FoodCreate, db: Session = Depends(get_db),
                  current_user: int = Depends(oauth2.get_current_user)):
     
-    new_post = models.Post(owner_id=current_user.id, **post.dict())
-    db.add(new_post)
+    new_food = models.Food(owner_id=current_user.id, **food.dict())
+    db.add(new_food)
     db.commit()
-    db.refresh(new_post)
+    db.refresh(new_food)
 
-    return new_post
+    return new_food
 
 
-@router.get("/{id}", response_model=schemas.Post)
-def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.get("/{id}", response_model=schemas.Food)
+def get_food(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    food = db.query(models.Food).filter(models.Food.id == id).first()
 
-    if post is None:
+    if food is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"post with id: {id} does not exist")
+                            detail=f"food with id: {id} does not exist")
         
-    if post.owner_id != int(current_user.id):
+    if food.owner_id != int(current_user.id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
 
-    return post
+    return food
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_food(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    post_query = db.query(models.Post).filter(models.Post.id == id)
-    post = post_query.first()
+    food_query = db.query(models.Food).filter(models.Food.id == id)
+    food = food_query.first()
 
-    if post is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if food is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"food with id: {id} does not exist")
     
-    if post.owner_id != int(current_user.id):
+    if food.owner_id != int(current_user.id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
         
 
-    post_query.delete(synchronize_session=False)
+    food_query.delete(synchronize_session=False)
     db.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.put("/{id}", response_model=schemas.Post)
-def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db),
+@router.put("/{id}", response_model=schemas.Food)
+def update_food(id: int, updated_food: schemas.FoodCreate, db: Session = Depends(get_db),
                 current_user: int = Depends(oauth2.get_current_user)):
 
-    post_query = db.query(models.Post).filter(models.Post.id == id)
-    post = post_query.first()
-    if post is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    food_query = db.query(models.Food).filter(models.Food.id == id)
+    food = food_query.first()
+    if food is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"food with id: {id} does not exist")
 
-    if post.owner_id != int(current_user.id):
+    if food.owner_id != int(current_user.id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
     
-    post_query.update(updated_post.dict(), synchronize_session=False)
+    food_query.update(updated_food.dict(), synchronize_session=False)
 
     db.commit()
 
-    return post_query.first()
+    return food_query.first()

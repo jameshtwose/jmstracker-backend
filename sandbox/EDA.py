@@ -14,13 +14,16 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 #     print(result.all())
 
 #%%
+# with engine.connect() as conn:
+#     result = conn.execute(text('DROP TABLE IF EXISTS jmstracker_backend;'))
+#%%
 jmstracker_backend_df = pd.read_sql_table("jmstracker_backend", con=engine)
 display(jmstracker_backend_df)
 jmstracker_backend_df.info()
 # %%
-posts_df = pd.read_sql_table("posts", con=engine)
-display(posts_df)
-posts_df.info()
+# posts_df = pd.read_sql_table("posts", con=engine)
+# display(posts_df)
+# posts_df.info()
 # %%
 todos_df = pd.read_sql_table("todos", con=engine)
 display(todos_df)

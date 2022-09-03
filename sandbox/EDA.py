@@ -5,6 +5,8 @@ from sqlalchemy import create_engine, text
 from dotenv import load_dotenv, find_dotenv
 
 #%%
+load_dotenv(find_dotenv())
+
 SQLALCHEMY_DATABASE_URL = os.environ["cockroack_db_deta_connect_string"]
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

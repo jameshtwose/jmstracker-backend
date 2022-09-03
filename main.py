@@ -6,10 +6,10 @@ from sqlalchemy.orm import Session
 
 import models, schemas
 from database import SessionLocal, engine, get_db
-from routers import post, user, auth
+from routers import post, user, auth, nutritional_information
 
-# from dotenv import load_dotenv, find_dotenv
-# load_dotenv(find_dotenv())
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -17,6 +17,7 @@ app = FastAPI()
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(nutritional_information.router)
 
 origins = ["https://jameshtwose.github.io", "*"]
 
